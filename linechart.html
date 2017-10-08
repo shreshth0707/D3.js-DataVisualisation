@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+</style>
+<body>
+
+<!-- load the d3.js library -->    	
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+//   *************************************************
+d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CreditBankName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+
+//  ******************************************8888
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+
+
+// set the ranges
+var x = d3.scaleOrdinal().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+console.log("define the line")
+var valueline = d3.line()
+    .x(function(d) { 
+	return x(d.Value); })
+    .y(function(d) { return y(d.Frequency); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+
+ 
+
+  // Scale the range of the data
+  x.domain(chartData.map(function(d) { return d.Value; }));
+  y.domain([0, maxtrans]);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([chartData])
+      .attr("class", "line")
+      .attr("d", valueline(chartData))
+
+  // Add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+
+}
+
+</script>
+</body>

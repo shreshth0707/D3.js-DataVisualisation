@@ -1,0 +1,59 @@
+<html>
+	<head>
+	<title>
+	D3 tutorial
+	</title>
+	
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+	</head>
+<body>
+<script>
+			var width=800;
+			var height=600;
+		
+			var canvas=d3.select("body").append("svg")
+						.attr("width",2500)
+						.attr("height",2500)
+						.append("g")
+							.attr("transform","translate(50,50)");
+		
+			var pack=d3.layout.pack().size([width ,height-50]).padding(10);
+			
+			// data will consist of the json object. 
+			d3.json("packlayout.json",function(data)      
+			{
+			//	console.log(data);
+			
+				//   nodes will consist of array of objects with their respective radius ,x and y coordinates.
+				var nodes=pack.nodes(data);
+			//	console.log(nodes);
+				
+				// binding data together
+				var node=canvas.selectAll(".node").data(nodes).enter().append("g")
+								.attr("class","node")
+								.attr("transform",function(d)                         // d conains node data
+  								{
+									return "translate(" + d.x + "," + d.y +")" ;
+								});
+			
+			// append circle to eveny node to be displayed
+				node.append("circle").attr("r",function(d)
+				{
+					return d.r
+				}).attr("fill","steelblue").attr("opacity",0.25).attr("stroke","#ADADAD").attr("stroke-width","2");
+				
+					node.append("text").text(function(d){
+									return d.children?" ":d.name;
+			});
+			
+			});
+		
+		
+			
+			
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+{
+"name":"Max",
+"value":100,
+"children":[
+{
+	"name":"Slyvia",
+	"value":75,
+	"children":[
+	{ "name":"craig","value":25},
+	{"name":"robin","value":25},
+	{"name":"anna","value":25}
+	]
+},
+{
+	"name":"David",
+	"value":30,
+	"children" : [
+		{"name":"jeff","value":40},
+		{"name":"buffy","value":50},
+		{"name":"tanmay","value":60,
+
+"children":[
+{"name":"bob","value":70}
+]	
+}
+]
+}
+]
+
+}

@@ -1,0 +1,457 @@
+<html>
+	<head>
+	<title>
+	D3 tutorial
+	</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	</head>
+	
+	<style>
+
+#div3 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 960px;
+  height: 500px;
+  position: relative;
+}
+
+<!--
+svg {
+	width: 2800;
+	height: 100%;
+}
+
+-->
+path.slice{
+	stroke-width:2px;
+}
+
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.labelValue
+{
+	font-size: 60%;
+	opacity: .5;
+	
+}
+
+.toolTip {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+}
+text {
+  font: 12px sans-serif;
+}
+</style>
+	
+	
+	
+	
+	
+<body>
+<div id='div3' class='div1'/>
+
+<script>
+
+/*
+		var hugeData = {}
+		d3.csv("payment_data_1.csv", function(data) {
+		hugeData = data;
+		});
+*/
+
+/*
+var hugeData = [
+  {"Year": "1997", "Company": "Ford", "Model": "E350", "Length": "2.34"},
+  {"Year": "2000", "Company": "Mercury", "Model": "Cougar", "Length": "2.38"},
+  {"Year": "2001", "Company": "Ford", "Model": "Cougar", "Length": "2.38"}
+];
+		
+		
+		var frequency = {};
+var hugeDataLength = hugeData.length;
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.Company ;
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+}
+
+var chartData = Object.keys(frequency).map(function(company){
+  var value = frequency[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+	*/
+
+
+		var hugeData = {};
+		var chartData={};
+d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CustomerName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+
+	
+	
+	//   **********************************************************  working with the filtered data.
+	/*
+	
+			var data=[10,50,80];
+			var r=300;
+			var canvas=d3.select("body").append("svg")
+						.attr("width",1500)
+						.attr("height",1500)
+			
+			
+			var color=d3.scale.ordinal().range(["red","blue","orange","green","blue","pink"]);
+						
+			var group=canvas.append("g").attr("transform","translate(300,300)");
+						
+			// this is the arc generator			
+			var arc=d3.svg.arc().innerRadius(r-100)
+								.outerRadius(r);
+								
+								
+			// this is layout generator.Takes data and return object for each data ie start and end angle;					
+			var pie=d3.layout.pie().value(function(d){
+									return d.Frequency;
+									});
+		
+		// bind data from layout to document 
+			var arcs=group.selectAll(".arc").data(pie(chartData)).enter()
+						.append("g").attr("class","arc");
+						
+			// we need to append paths to each arcs			
+			arcs.append("path").attr("d",arc)
+				.attr("fill",function(d){
+				console.log(d);
+					return color(d.value);
+				})
+				.on("mouseenter", function(d) {
+				 console.log(d);
+              //console.log("mousein")
+              text = arcs.append("text")
+                  .attr("transform", arc.centroid(d))
+                  .attr("dy", ".5em")
+                  .style("text-anchor", "middle")
+                  .style("fill", "blue")
+				  .attr("font-size","1em")
+                  .attr("class", "on")
+                  .text(d.data.Value);                     // to access fild of data that hasnt been present in d.
+      })
+
+      .on("mouseout", function(d) {
+               text.remove();
+      });
+			
+			//append text to each group element
+			arcs.append("text").attr("transform",function(d)
+								{
+										return  "translate(" + arc.centroid(d) + ")";
+										})
+								.attr("text-anchor","middle")
+								.text(function(d)
+								{
+								return d.value;
+								})
+								.attr("font-size","1.5em");
+								
+	*/							
+	
+	var svg = d3.select("#div3")
+	.append("svg").attr("width",1800).attr("height","100%")
+	.append("g")
+
+svg.append("g")
+	.attr("class", "slices");
+svg.append("g")
+	.attr("class", "labelName");
+svg.append("g")
+	.attr("class", "labelValue");
+svg.append("g")
+	.attr("class", "lines");
+
+var width = 2500,
+    height = 450,
+	radius = Math.min(width, height) / 2;
+
+var pie = d3.layout.pie()
+	.sort(null)
+	.value(function(d) {
+		return d.Frequency;
+	});
+
+var arc = d3.svg.arc()
+	.outerRadius(radius * 0.8)
+	.innerRadius(radius * 0.4);
+
+var outerArc = d3.svg.arc()
+	.innerRadius(radius * 0.9)
+	.outerRadius(radius * 0.9);
+
+var legendRectSize = (radius * 0.05);
+var legendSpacing = radius * 0.02;
+
+
+var div = d3.select("body").append("div").attr("class", "toolTip");
+
+var a=550;
+svg.attr("transform", "translate(" + a + "," + height / 2 + ")");
+
+var colorRange = d3.scale.category20();
+var color = d3.scale.ordinal()
+	.range(colorRange.range());
+
+
+
+	
+
+change(chartData);
+
+
+function change(data) {
+
+	console.log("inside")
+	console.log(data);
+	/* ------- PIE SLICES -------*/
+	var slice = svg.select(".slices").selectAll("path.slice")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    slice.enter()
+        .insert("path")
+        .style("fill", function(d) { return color(d.data.Value); })
+        .attr("class", "slice");
+
+    slice
+        .transition().duration(1000)
+        .attrTween("d", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        })
+    slice
+        .on("mousemove", function(d){
+            div.style("left", d3.event.pageX+10+"px");
+            div.style("top", d3.event.pageY-25+"px");
+            div.style("display", "inline-block");
+            div.html((d.data.Value)+"<br>"+(d.data.Frequency));
+        });
+    slice
+        .on("mouseout", function(d){
+            div.style("display", "none");
+        });
+
+    slice.exit()
+        .remove();
+
+    var legend = svg.selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('transform', function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset =  height * color.domain().length / 2;
+            var horz = -3 * legendRectSize + 220;
+            var vert = i * height - offset;
+            return 'translate(' + horz + ',' + vert + ')';
+        });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
+
+    /* ------- TEXT LABELS -------*/
+
+    var text = svg.select(".labelName").selectAll("text")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .text(function(d) {
+            return (d.data.Value+": "+d.Frequency);
+        });
+
+    function midAngle(d){
+        return d.startAngle + (d.endAngle - d.startAngle)/2;
+    }
+
+    text
+        .transition().duration(1000)
+        .attrTween("transform", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                return "translate("+ pos +")";
+            };
+        })
+        .styleTween("text-anchor", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                return midAngle(d2) < Math.PI ? "start":"end";
+            };
+        })
+        .text(function(d) {
+            return (d.data.Value);
+        });
+
+
+    text.exit()
+        .remove();
+
+    /* ------- SLICE TO TEXT POLYLINES -------*/
+
+    var polyline = svg.select(".lines").selectAll("polyline")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    polyline.enter()
+        .append("polyline");
+
+    polyline.transition().duration(1000)
+        .attrTween("points", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                return [arc.centroid(d2), outerArc.centroid(d2), pos];
+            };
+        });
+
+    polyline.exit()
+        .remove();
+};
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+		
+		
+		
+		
+		
+	
+</script>
+
+</body>
+
+</html>

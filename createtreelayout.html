@@ -1,0 +1,71 @@
+<html>
+	<head>
+	<title>
+	D3 tutorial
+	</title>
+	
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+	</head>
+<body>
+<script>
+		
+			var canvas=d3.select("body").append("svg")
+						.attr("width",500)
+						.attr("height",500)
+						.append("g")
+							.attr("transform","translate(50,50)");
+		
+			var tree=d3.layout.tree()
+						.size([400,400]);
+
+			d3.json("treedata.json",function(data){
+					
+	// returns array of object correspponding to all the nodes.
+				var nodes=tree.nodes(data);     
+// returns array of links between 2 objects.each will in turn have 2 objects source and destination.
+
+				var links=tree.links(nodes);		
+				
+				// binding nodes together
+				var node=canvas.selectAll(".node")
+							.data(nodes)
+							.enter()
+							.append("g")
+							.attr("class","node")
+							.attr("transform",function(d)
+						//		{return "translate(" + d.x + "," + d.y + ")";
+						//			});
+	
+						// to move it from left to right
+								{
+									return "translate(" +d.y+","+d.x + ")";
+								});
+
+			
+				// adding circle at each node
+				node.append("circle").attr("r",5).attr("fill","steelblue");
+				
+				// add text to each node
+				node.append("text").text(function(d) {return d.name;});
+
+				// adding diagonal between each link
+					var diagonal=d3.svg.diagonal()
+						// to change from left to right
+							.projection(function(d){
+										return [d.y,d.x];
+							});
+					canvas.selectAll(".link").data(links).enter()
+									.append("path")
+									.attr("class","link")
+									.attr("fill","none")
+									.attr("stroke","#ADADAD")
+									.attr("d",diagonal);
+
+				})
+			
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,1744 @@
+
+<html>
+<head>
+  <link rel="stylesheet" href="404.css">
+  <style>     // will include the css element
+
+
+
+#div1 .axis path,
+#div1 .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}	
+
+#div2 .axis path,
+#div2 .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}	
+
+
+
+ #switchbutton{
+ 
+ background-color: #4CAF50;
+ }
+ 
+ 
+ .linebank {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+  
+ </style>
+ 
+ <script src="http://d3js.org/d3.v3.min.js"></script>
+ <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+ 
+ <style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+	float:left;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ADADAD;
+	top:30px;
+	width:100px;
+    min-width: 160px;
+    padding: 20px 0px;
+    z-index: 1;
+	font-size:20px; 
+	border radius:10px;
+	text-transform:uppercase; 
+	color:#FFFFFF;
+	background-color:#FF6600;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+.dropdown1 {
+    position: relative;
+    display: inline-block;
+	float:right;
+	top:-150;
+}
+
+.dropdown1-content {
+    display: none;
+    position: absolute;
+    background-color: #ADADAD;
+	top:30px;
+	right:6px;
+	width:100px;
+    min-width: 160px;
+    padding: 20px 0px;
+    z-index: 1;
+	font-size:20px; 
+	border radius:10px;
+	text-transform:uppercase; 
+	color:#FFFFFF;
+	background-color:#FF6600;
+}
+
+.dropdown1:hover .dropdown1-content {
+    display: block;
+}
+
+
+
+
+
+</style>
+</head>
+<body id="bb" background-color="radial-gradient(red, green, blue)">
+
+<div class="wrapper row2">
+  <div id="container" class="clear">
+  
+    <section id="fof" class="clear">
+   <div class="dropdown">
+  <p>
+   <a class="go-back" href="#">Filter<br></a>
+		</p>
+		 <div class="dropdown-content">
+   <ul>
+   <li> <a  href="#" onclick="functionclientname()"> Customer name </a></li>
+   <li> <a  href="#"  onclick="filterclientdonut()">Client Bank Name</a></li>
+   </ul>
+   
+  </div>
+		</div>
+	 <div class="positioned">
+        <h1> <u>Data Visualisation</u></h1>
+        <p>Number of Transactions vs Months</p>
+      </div>
+	  <div class="dropdown1" top=20>
+	  <p>
+      <a class="go-home" href="#" >Switch<br></a>
+	  </p>
+	  <div  class="dropdown1-content">
+	  <ul>
+	  <li> <a href="#" onclick="handleline()">Line Chart</></li>
+	  <li> <a href="#" onclick="handledonut()">Donut</></li>
+	  <li> <a href="#" onclick="handlebar()">Bar Graph</></li>
+	  
+	  </ul>
+	  </div>
+	  </div>
+    </section>
+	
+   
+  </div>
+</div>
+
+  
+ <div id = 'div1' class = 'div1' style='float:up'></div> 					<!--  filter bankname:line chart-->
+<div id = 'div2' class = 'div2' style='float:up'></div>    <!--  filter-clientname:line chart-->
+<div id='div3' class='div3' style='float:up' ></div>      <!--  filter client name : donut-->
+<div id='div4' class='div4' style='float up'></div>        <!--  filter bankname : donut-->
+<div id='div5' class='div5' style='float:up' ></div>      <!--  filter client name : bar-->
+<div id='div6' class='div6' style='float up'></div>        <!--  filter bankname : bar-->
+
+
+<script>
+
+	function switchGraphs()
+	{
+		if((document.getElementById('div4').style.visibility == "visible") || (document.getElementById('div6').style.visibility == "visible"))
+		{
+		console.log("reached switch graph");
+		switch2();
+		}
+		else if((document.getElementById('div3').style.visibility == "visible") || (document.getElementById('div5').style.visibility == "visible"))
+		{
+		console.log("reached switch graph");
+		switch3();
+		}
+	}
+	
+					// handle line chart
+	function handleline()
+	{
+		console.log("inside handle line func")
+		
+		if (isNaN(handleline.bank)){
+		console.log(handleline.bank)
+			handleline.bank=false;
+		}
+		if (isNaN(handleline.client)){
+		console.log(handleline.client)
+			handleline.client=false;
+		}
+		
+		if((document.getElementById('div4').style.visibility == "visible") || (document.getElementById('div6').style.visibility == "visible")
+|| (document.getElementById('div1').style.visibility == "visible")		)
+		{
+		console.log("display bank line")
+			if(handleline.bank==false){
+			
+			filterbankline();
+			handleline.bank =true;
+			}
+			else{
+				document.getElementById('div2').style.visibility = "hidden";
+			document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div1').style.height = "1800px";
+		document.getElementById('div1').style.visibility = "visible";
+			}
+		}
+		else
+		{
+		console.log("display client line")
+			if(handleline.client==false){
+			filterclientline();
+			handleline.client=true;
+			}
+			else{
+				document.getElementById('div1').style.visibility = "hidden";
+			document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div2').style.height = "1800px";
+		document.getElementById('div2').style.visibility = "visible";
+			}
+		}
+		}
+		
+						//handle bar chart
+	function handlebar()
+	{
+		console.log("inside handle line func")
+		
+		if (isNaN(handlebar.bank)){
+		console.log(handlebar.bank)
+			handlebar.bank=false;
+		}
+		if (isNaN(handlebar.client)){
+		console.log(handlebar.client)
+			handlebar.client=false;
+		}
+		
+		if((document.getElementById('div4').style.visibility == "visible") || (document.getElementById('div6').style.visibility == "visible")
+|| (document.getElementById('div1').style.visibility == "visible")		)
+		{
+		console.log("display bank line")
+			if(handlebar.bank==false){
+			
+			filterbankbar();
+			handlebar.bank =true;
+			}
+			else{
+				document.getElementById('div2').style.visibility = "hidden";
+			document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div6').style.height = "1800px";
+		document.getElementById('div6').style.visibility = "visible";
+			}
+		}
+		else
+		{
+		console.log("display client bar")
+			if(handlebar.client==false){
+			filterclientbar();
+			handlebar.client=true;
+			}
+			else{
+				document.getElementById('div1').style.visibility = "hidden";
+			document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div5').style.height = "1800px";
+		document.getElementById('div5').style.visibility = "visible";
+			}
+		}
+		}
+		
+					// handle donut chart
+	function handledonut()
+	{
+	console.log("inside handle donut");
+		if (isNaN(handledonut.bank)){
+	//	console.log(handledonut.bank)
+			handledonut.bank=false;
+		}
+		if (isNaN(handledonut.client)){
+	//	console.log(handledonut.client)
+			handledonut.client=false;
+		}
+		
+		if((document.getElementById('div1').style.visibility === "visible") || (document.getElementById('div6').style.visibility === "visible") 
+			|| (document.getElementById('div4').style.visibility === "visible") )
+		{
+		console.log("display bank donut")
+			document.getElementById('div2').style.visibility = "hidden";
+			document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div4').style.height = "1800px";
+		document.getElementById('div4').style.visibility = "visible";
+			if(handledonut.bank==false){
+			functionclientname();
+			handledonut.bank =true;
+			}
+		}
+		else
+		{
+			console.log("display client donut")
+			
+				document.getElementById('div1').style.visibility = "hidden";
+			document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div3').style.height = "1800px";
+		document.getElementById('div3').style.visibility = "visible"
+			
+			if(handledonut.client==false){
+			filterclientdonut();
+			handledonut.client=true;
+			}
+		}
+		}
+				//  bar for client filter
+	function filterclientbar()
+	{
+		d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CustomerName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right +180,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.Frequency + "</span>";
+  })
+
+var svg = d3.select("body").select("#div5").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + 180 + "," + margin.top + ")");
+
+svg.call(tip);
+
+
+console.log("hello")
+  x.domain(chartData.map(function(d) { return d.Value; }));
+  y.domain([0, maxtrans]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency");
+
+  svg.selectAll(".bar")
+      .data(chartData)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.Value); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.Frequency); })
+      .attr("height", function(d) { return height - y(d.Frequency); }).attr("fill","orange")
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+
+
+function type(d) {
+  d.Frequency =+ d.Frequency;
+  return d;
+}
+}
+}
+	
+	
+		// donut for bank name
+	function functionclientname()
+	{
+	
+		document.getElementById('div1').style.visibility = "hidden";
+			document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div4').style.height = "1800px";
+		document.getElementById('div4').style.visibility = "visible";
+		
+	
+		console.log("inside filter 2");
+		var hugeData = {};
+		var chartData={};
+d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CreditBankName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+var svg = d3.select("#div4")
+	.append("svg").attr("width",1800).attr("height","100%")
+	.append("g")
+
+svg.append("g")
+	.attr("class", "slices");
+svg.append("g")
+	.attr("class", "labelName");
+svg.append("g")
+	.attr("class", "labelValue");
+svg.append("g")
+	.attr("class", "lines");
+
+var width = 2500,
+    height = 450,
+	radius = Math.min(width, height) / 2;
+
+var pie = d3.layout.pie()
+	.sort(null)
+	.value(function(d) {
+		return d.Frequency;
+	});
+
+var arc = d3.svg.arc()
+	.outerRadius(radius * 0.8)
+	.innerRadius(radius * 0.4);
+
+var outerArc = d3.svg.arc()
+	.innerRadius(radius * 0.9)
+	.outerRadius(radius * 0.9);
+
+var legendRectSize = (radius * 0.05);
+var legendSpacing = radius * 0.02;
+
+
+var div = d3.select("body").append("div").attr("class", "toolTip");
+
+var a=600;
+svg.attr("transform", "translate(" + a + "," + height / 2 + ")");
+
+var colorRange = d3.scale.category20();
+var color = d3.scale.ordinal()
+	.range(colorRange.range());
+
+
+
+	
+
+change(chartData);
+
+
+function change(data) {
+
+	console.log("inside")
+	console.log(data);
+	/* ------- PIE SLICES -------*/
+	var slice = svg.select(".slices").selectAll("path.slice")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    slice.enter()
+        .insert("path")
+        .style("fill", function(d) { return color(d.data.Value); })
+        .attr("class", "slice");
+
+    slice
+        .transition().duration(1000)
+        .attrTween("d", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        })
+    slice
+        .on("mousemove", function(d){
+            div.style("left", d3.event.pageX+10+"px");
+            div.style("top", d3.event.pageY-25+"px");
+            div.style("display", "inline-block");
+            div.html((d.data.Value)+"<br>"+(d.data.Frequency));
+        });
+    slice
+        .on("mouseout", function(d){
+            div.style("display", "none");
+        });
+
+    slice.exit()
+        .remove();
+
+    var legend = svg.selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('transform', function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset =  height * color.domain().length / 2;
+            var horz = -3 * legendRectSize + 220;
+            var vert = i * height - offset;
+            return 'translate(' + horz + ',' + vert + ')';
+        });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
+
+    /* ------- TEXT LABELS -------*/
+
+    var text = svg.select(".labelName").selectAll("text")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .text(function(d) {
+            return (d.data.Value+": "+d.Frequency);
+        });
+
+    function midAngle(d){
+        return d.startAngle + (d.endAngle - d.startAngle)/2;
+    }
+
+    text
+        .transition().duration(1000)
+        .attrTween("transform", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                return "translate("+ pos +")";
+            };
+        })
+        .styleTween("text-anchor", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                return midAngle(d2) < Math.PI ? "start":"end";
+            };
+        })
+        .text(function(d) {
+            return (d.data.Value);
+        });
+
+
+    text.exit()
+        .remove();
+
+    /* ------- SLICE TO TEXT POLYLINES -------*/
+
+    var polyline = svg.select(".lines").selectAll("polyline")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    polyline.enter()
+        .append("polyline");
+
+    polyline.transition().duration(1000)
+        .attrTween("points", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                return [arc.centroid(d2), outerArc.centroid(d2), pos];
+            };
+        });
+
+    polyline.exit()
+        .remove();
+};	
+}
+}
+
+
+//   ****************************************************************************************8
+		// donut for client name
+	function  filterclientdonut()
+	{
+		
+	document.getElementById('div1').style.visibility = "hidden";
+			document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div3').style.height = "1800px";
+		document.getElementById('div3').style.visibility = "visible";
+	
+	
+	
+	console.log("inside function 1");
+	var hugeData = {};
+		var chartData={};
+d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CustomerName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log("chartData");
+
+console.log(chartData);
+	
+	
+var svg = d3.select("#div3")
+	.append("svg").attr("width",1800).attr("height","100%")
+	.append("g")
+
+svg.append("g")
+	.attr("class", "slices");
+svg.append("g")
+	.attr("class", "labelName");
+svg.append("g")
+	.attr("class", "labelValue");
+svg.append("g")
+	.attr("class", "lines");
+
+var width = 2500,
+    height = 450,
+	radius = Math.min(width, height) / 2;
+
+var pie = d3.layout.pie()
+	.sort(null)
+	.value(function(d) {
+		return d.Frequency;
+	});
+
+var arc = d3.svg.arc()
+	.outerRadius(radius * 0.8)
+	.innerRadius(radius * 0.4);
+
+var outerArc = d3.svg.arc()
+	.innerRadius(radius * 0.9)
+	.outerRadius(radius * 0.9);
+
+var legendRectSize = (radius * 0.05);
+var legendSpacing = radius * 0.02;
+
+
+var div = d3.select("body").append("div").attr("class", "toolTip");
+
+var a=600;
+svg.attr("transform", "translate(" + a + "," + height / 2 + ")");
+
+var colorRange = d3.scale.category20();
+var color = d3.scale.ordinal()
+	.range(colorRange.range());
+
+
+
+	
+
+change(chartData);
+
+
+function change(data) {
+
+	console.log("inside")
+	console.log(data);
+	/* ------- PIE SLICES -------*/
+	var slice = svg.select(".slices").selectAll("path.slice")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    slice.enter()
+        .insert("path")
+        .style("fill", function(d) { return color(d.data.Value); })
+        .attr("class", "slice");
+
+    slice
+        .transition().duration(1000)
+        .attrTween("d", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        })
+    slice
+        .on("mousemove", function(d){
+            div.style("left", d3.event.pageX+10+"px");
+            div.style("top", d3.event.pageY-25+"px");
+            div.style("display", "inline-block");
+            div.html((d.data.Value)+"<br>"+(d.data.Frequency));
+        });
+    slice
+        .on("mouseout", function(d){
+            div.style("display", "none");
+        });
+
+    slice.exit()
+        .remove();
+
+    var legend = svg.selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('transform', function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset =  height * color.domain().length / 2;
+            var horz = -3 * legendRectSize + 220;
+            var vert = i * height - offset;
+            return 'translate(' + horz + ',' + vert + ')';
+        });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
+
+    /* ------- TEXT LABELS -------*/
+
+    var text = svg.select(".labelName").selectAll("text")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .text(function(d) {
+            return (d.data.Value+": "+d.Frequency);
+        });
+
+    function midAngle(d){
+        return d.startAngle + (d.endAngle - d.startAngle)/2;
+    }
+
+    text
+        .transition().duration(1000)
+        .attrTween("transform", function(d) {
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                return "translate("+ pos +")";
+            };
+        })
+        .styleTween("text-anchor", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                return midAngle(d2) < Math.PI ? "start":"end";
+            };
+        })
+        .text(function(d) {
+            return (d.data.Value);
+        });
+
+
+    text.exit()
+        .remove();
+
+    /* ------- SLICE TO TEXT POLYLINES -------*/
+
+    var polyline = svg.select(".lines").selectAll("polyline")
+        .data(pie(data), function(d){ return d.data.Value });
+
+    polyline.enter()
+        .append("polyline");
+
+    polyline.transition().duration(1000)
+        .attrTween("points", function(d){
+            this._current = this._current || d;
+            var interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                var d2 = interpolate(t);
+                var pos = outerArc.centroid(d2);
+                pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                return [arc.centroid(d2), outerArc.centroid(d2), pos];
+            };
+        });
+
+    polyline.exit()
+        .remove();
+};	
+}
+}
+
+				// bar for bank filter.   
+	function  filterbankbar()
+	{
+		
+
+d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CreditBankName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.Frequency + "</span>";
+  });
+
+var svg = d3.select("body").select("#div6").append("svg")
+    .attr("width", width + margin.left + margin.right+140)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + 180 + "," + margin.top + ")");
+
+svg.call(tip);
+
+
+console.log("hello")
+  x.domain(chartData.map(function(d) { return d.Value; }));
+  y.domain([0, maxtrans]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency");
+
+  svg.selectAll(".bar")
+      .data(chartData)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.Value); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.Frequency); })
+      .attr("height", function(d) { return height - y(d.Frequency); }).attr("fill","orange")
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+
+
+function type(d) {
+  d.Frequency =+ d.Frequency;
+  return d;
+}
+}
+
+		
+}
+					
+					// line chart for bank filter.
+	function filterbankline()
+{
+	document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div1').style.height = "1800px";
+		document.getElementById('div1').style.visibility = "visible";
+
+
+
+
+//********************************************************************
+	d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CreditBankName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+
+//  **********************************************************
+// set the dimensions and margins of the graph
+
+var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// Parse the date / time
+
+// Set the ranges
+var x = d3.scale.ordinal().rangeRoundBands([0, width]);
+var y = d3.scale.linear().range([height, 0]);
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis().scale(y)
+    .orient("left");
+
+// Define the line
+var valueline = d3.svg.line()
+    .x(function(d) { return x(d.Value); })
+    .y(function(d) { return y(d.Frequency); });
+    
+// Adds the svg canvas
+var svg = d3.select("body").select("#div1")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" +200 + "," + margin.top + ")");
+
+// Get the data
+
+
+    // Scale the range of the data
+    x.domain(chartData.map(function(d) { return d.Value; }));
+    y.domain([0, maxtrans +500]);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(chartData))
+		.attr("stroke","steelblue")
+		.attr("stroke-width","2")
+		.attr("shape-rendering","crispEdges")
+		.attr("fill","none");
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+}
+}
+					// line chart for client filter.
+	function filterclientline()
+{
+document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div2').style.height = "1800px";
+		document.getElementById('div2').style.visibility = "visible";
+
+
+
+
+//********************************************************************
+	d3.csv("paymentdata1.csv", function(data) {
+    hugeData = data;
+	console.log("here");
+	fun1()
+});
+function fun1(){
+
+
+//Fetch data 
+
+var frequency = {};
+var hugeDataLength = hugeData.length;
+
+
+var maxtrans=0;
+var companyname=[];  // array of companynames
+
+for(var i = 0; i < hugeDataLength; i++){
+  var current = hugeData[i];
+  var currentCompany = current.CustomerName;
+  
+  if(companyname.indexOf(currentCompany)==-1)        // adding unique elements to array
+  companyname.push(currentCompany); 
+  
+  
+  if(!frequency.hasOwnProperty(currentCompany)) frequency[currentCompany] = 0;
+  frequency[currentCompany]++;
+
+  if(frequency[currentCompany]>maxtrans)
+  maxtrans=frequency[currentCompany];
+}
+console.log(maxtrans);   // maxvalue
+var partial={};
+
+console.log(frequency);  
+console.log(companyname);
+
+
+
+
+for(var j=0;j<companyname.length;j++)
+{
+var current=frequency[i];
+var currentCompany=companyname[j];
+var other="other";
+if(frequency[currentCompany]<(0.01*maxtrans)){
+if(!partial.hasOwnProperty(other))
+partial[other]=frequency[currentCompany];
+partial[other]=partial[other]+ frequency[currentCompany];
+
+}
+else
+{
+partial[currentCompany]=frequency[currentCompany];
+}
+}
+console.log(partial);
+
+
+chartData = Object.keys(partial).map(function(company){
+  var value = partial[company];
+  return {
+    Value : company,
+    Frequency : value
+  }
+});
+console.log(chartData);
+
+
+
+//  **********************************************************
+// set the dimensions and margins of the graph
+
+var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// Parse the date / time
+
+// Set the ranges
+var x = d3.scale.ordinal().rangeRoundBands([0, width]);
+var y = d3.scale.linear().range([height, 0]);
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis().scale(y)
+    .orient("left");
+
+// Define the line
+var valueline = d3.svg.line()
+    .x(function(d) { return x(d.Value); })
+    .y(function(d) { return y(d.Frequency); });
+    
+// Adds the svg canvas
+var svg = d3.select("body").select("#div2")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + 200 + "," + margin.top + ")");
+
+// Get the data
+
+
+    // Scale the range of the data
+    x.domain(chartData.map(function(d) { return d.Value; }));
+    y.domain([0, maxtrans +500]);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(chartData))
+		.attr("stroke","steelblue")
+		.attr("stroke-width","2")
+		.attr("shape-rendering","crispEdges")
+		.attr("fill","none");
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+		.attr("stroke-width","2px")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+}
+}	
+					
+					// ##################
+function switch2(){
+	if (isNaN(switch2.bar)){
+		console.log(switch2.bar)
+			switch2.bar=false;
+		}
+		if (isNaN(switch2.click)){
+		console.log(switch2.click)
+			switch2.click=false;
+		}
+		if (isNaN(switch2.donut)){
+		console.log(switch2.donut)
+			switch2.donut=false;
+		}
+	if(switch2.bar == false){
+		//create bar, append to div  6
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "1800px";
+		document.getElementById('div6').style.visibility = "visible";
+		
+		
+		filterbankbar();
+		switch2.bar = true;
+	} 
+	else if(switch2.donut == false){
+		//create donut, append to div 4
+	
+		//hide all except div4
+		
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div4').style.height = "1800px";
+		document.getElementById('div4').style.visibility = "visible";
+		
+		functionclientname();
+		switch2.donut=true;
+		switch2.click = true;
+	}
+		
+		else{
+		
+			if(switch2.click == false){
+				//hide all
+				//show div 4
+				console.log(switch1.click)
+				
+				document.getElementById('div1').style.visibility = "hidden";
+				document.getElementById('div2').style.visibility = "hidden";
+				document.getElementById('div3').style.visibility = "hidden";
+				document.getElementById('div5').style.visibility = "hidden";
+				document.getElementById('div6').style.visibility = "hidden";
+				document.getElementById('div1').style.height = "0px";
+				document.getElementById('div2').style.height = "0px";
+				document.getElementById('div3').style.height = "0px";
+				document.getElementById('div5').style.height = "0px";
+				document.getElementById('div6').style.height = "0px";
+				
+				document.getElementById('div4').style.height = "1500px";
+				document.getElementById('div4').style.visibility = "visible";
+				
+				switch2.click = true;
+				
+				
+			} 
+			else {
+			//hide all
+				//show div6  ie: bar
+					console.log(switch1.click)
+				document.getElementById('div1').style.visibility = "hidden";
+				document.getElementById('div2').style.visibility = "hidden";
+				document.getElementById('div3').style.visibility = "hidden";
+				document.getElementById('div4').style.visibility = "hidden";
+				document.getElementById('div5').style.visibility = "hidden";
+				document.getElementById('div1').style.height = "0px";
+				document.getElementById('div2').style.height = "0px";
+				document.getElementById('div3').style.height = "0px";
+				document.getElementById('div4').style.height = "0px";
+				document.getElementById('div5').style.height = "0px";
+				
+				document.getElementById('div6').style.height = "1500px";
+				document.getElementById('div6').style.visibility = "visible";
+				
+				
+				
+				switch2.click = false;
+			}
+		
+ }
+ }
+
+ // ************************************************************************************************************
+				
+function switch3(){
+	if (isNaN(switch3.bar)){
+		console.log(switch3.bar)
+			switch3.bar=false;
+		}
+		if (isNaN(switch3.click)){
+		console.log(switch3.click)
+			switch3.click=false;
+		}
+		if (isNaN(switch3.donut)){
+		console.log(switch3.donut)
+			switch3.donut=false;
+		}
+	if(switch3.bar == false){
+		//create bar, append to div  5
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div3').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div3').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div5').style.height = "1800px";
+		document.getElementById('div5').style.visibility = "visible";
+		
+		
+		filterclientbar();
+		switch3.bar = true;
+	} 
+	else if(switch3.donut == false){
+		//create donut, append to div 3
+	
+		//hide all except div3
+		
+		document.getElementById('div1').style.visibility = "hidden";
+		document.getElementById('div2').style.visibility = "hidden";
+		document.getElementById('div4').style.visibility = "hidden";
+		document.getElementById('div5').style.visibility = "hidden";
+		document.getElementById('div6').style.visibility = "hidden";
+		document.getElementById('div1').style.height = "0px";
+		document.getElementById('div2').style.height = "0px";
+		document.getElementById('div4').style.height = "0px";
+		document.getElementById('div5').style.height = "0px";
+		document.getElementById('div6').style.height = "0px";
+		document.getElementById('div3').style.height = "1800px";
+		document.getElementById('div3').style.visibility = "visible";
+		
+		filterclientdonut();
+		switch3.donut=true;
+		switch3.click = true;
+	}
+		
+		else{
+		
+			if(switch3.click == false){
+				//hide all
+				//show div 3 ie donut
+				console.log(switch1.click)
+				
+				document.getElementById('div1').style.visibility = "hidden";
+				document.getElementById('div2').style.visibility = "hidden";
+				document.getElementById('div4').style.visibility = "hidden";
+				document.getElementById('div5').style.visibility = "hidden";
+				document.getElementById('div6').style.visibility = "hidden";
+				document.getElementById('div1').style.height = "0px";
+				document.getElementById('div2').style.height = "0px";
+				document.getElementById('div4').style.height = "0px";
+				document.getElementById('div5').style.height = "0px";
+				document.getElementById('div6').style.height = "0px";
+				
+				document.getElementById('div3').style.height = "1500px";
+				document.getElementById('div3').style.visibility = "visible";
+				
+				switch3.click = true;
+				
+				
+			} 
+			else {
+			//hide all
+				//show div5  ie: bar
+					console.log(switch1.click)
+				document.getElementById('div1').style.visibility = "hidden";
+				document.getElementById('div2').style.visibility = "hidden";
+				document.getElementById('div3').style.visibility = "hidden";
+				document.getElementById('div4').style.visibility = "hidden";
+				document.getElementById('div6').style.visibility = "hidden";
+				document.getElementById('div1').style.height = "0px";
+				document.getElementById('div2').style.height = "0px";
+				document.getElementById('div3').style.height = "0px";
+				document.getElementById('div4').style.height = "0px";
+				document.getElementById('div6').style.height = "0px";
+				
+				document.getElementById('div5').style.height = "1500px";
+				document.getElementById('div5').style.visibility = "visible";
+				
+				
+				
+				switch3.click = false;
+			}
+		
+ }
+ }
+ 				
+				
+ 
+//************************************************************************************************
+
+
+
+	
+ 
+
+</script>
+
+
+</body>
+</html>
